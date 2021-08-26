@@ -1,4 +1,4 @@
-const baseUrl = process.env.BASE_URL || `http://leafly.com`;
+const baseUrl = process.env.BASE_URL || `https://nightwatch-demo.netlify.com/`;
 
 const chrome = {
   browserName: 'chrome',
@@ -7,30 +7,14 @@ const chrome = {
   databaseEnabled: true,
   applicationCacheEnabled: true,
   webStorageEnabled: true,
+  w3c: false,
   loggingPrefs: { driver: 'ALL', server: 'ALL', browser: 'ALL' },
-  // https://github.com/webdriverio/webdriverio/issues/313
-  'goog:chromeOptions': {
-    prefs: {
-      intl: {
-        accept_languages: 'en-US',
-      },
-      credentials_enable_service: false,
-      'profile.password_manager_enabled': false,
-    },
-    w3c: false,
-    args: [
-      '--window-size=1920,1280',
-      '--ignore-certificate-errors',
-      '--disable-web-security',
-      '--no-sandbox',
-    ],
-  },
 };
 
 module.exports = {
   skip_testcases_on_fail: false,
   src_folders: ['dist/tests'],
-  page_objects_path: 'dist/pages',
+  //page_objects_path: 'dist/pages', //Uncomment if you are going to use pages
   output_folder: 'output/reports',
   custom_commands_path: 'dist/helpers/commands',
   globals_path: 'dist/helpers/globals.js',
@@ -50,11 +34,14 @@ module.exports = {
   },
   test_settings: {
     default: {
-      desiredCapabilities: chrome,
+      desiredCapabilities: {
+        ...chrome,
+        chromeOptions: {
+          args: ['headless'],
+        },
+      },
       globals: {
         // for before/after hooks and variables, see src/helpers/globals.ts
-        waitForConditionTimeout: 15000,
-        asyncHookTimeout: 15000,
       },
       silent: true,
       launch_url: baseUrl,
@@ -68,24 +55,16 @@ module.exports = {
         path: 'output/screenshots',
       },
     },
-
     chrome: {
-      desiredCapabilities: chrome,
-      webdriver: chrome,
-    },
-    headless: {
       desiredCapabilities: {
         ...chrome,
-        'goog:chromeOptions': {
-          ...chrome['goog:chromeOptions'],
-          args: [
-            ...chrome['goog:chromeOptions'].args,
-            '--disable-dev-shm-usage',
-            '--headless',
-          ],
+        chromeOptions: {
+          args: ['--window-size=1920,1280'],
         },
       },
-      webdriver: chrome,
+      webdriver: {
+        start_process: true,
+      },
     },
     safari: {
       desiredCapabilities: {

@@ -1,5 +1,4 @@
 import { EnhancedPageObject } from 'nightwatch';
-import { HomePage } from './pages/Home';
 
 declare module 'nightwatch' {
   export interface ElementCommands {
@@ -11,11 +10,17 @@ declare module 'nightwatch' {
     T['elements']
   >;
 
-  interface NightwatchCustomPageObjects {
-    Home(): HomePage;
-  }
+  // Uncomment to extend types
+  //interface NightwatchCustomPageObjects {}
 
-  export interface NightwatchCustomCommand {
-    (this: Nightwatch, ...args: any[]): Nightwatch;
+  //export interface NightwatchCustomCommand {
+  //(this: Nightwatch, ...args: any[]): Nightwatch;
+  //}
+
+  export interface NightwatchBrowser {
+    weiredPause: (this: NightwatchBrowser, ms: number) => NightwatchBrowser;
+  }
+  export interface NightwatchGlobals {
+    timeToWait: number;
   }
 }

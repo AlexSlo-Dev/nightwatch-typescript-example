@@ -1,16 +1,18 @@
 import { NightwatchTestHooks } from 'nightwatch';
 import rimraf from 'rimraf';
-// https://github.com/nightwatchjs/nightwatch/blob/master/examples/globalsModule.js#L20
-const cleanupOutput = (cb) => {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const cleanupOutput = (done: any) => {
   const path = 'output/screenshots';
   rimraf(path, (err) => {
     err && console.log(err);
-    cb(err);
+    done(err);
   });
 };
 
 const globals: NightwatchTestHooks = {
-  before(browser, done) {
+  timeToWait: 1001,
+  before(done) {
     console.log;
     cleanupOutput(done);
   },
